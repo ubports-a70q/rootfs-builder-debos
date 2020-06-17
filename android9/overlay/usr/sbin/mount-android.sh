@@ -62,12 +62,13 @@ if [ -e $sys_persist ]; then
     mount $path /mnt/vendor/persist -t $type -o $options
 fi
 
-# Assume there's only one fstab in vendor
+# List all fstab files
 fstab=$(ls /vendor/etc/fstab*)
-[ ! -e "$fstab" ] && echo "fstab not found" && exit
+[ -z "$fstab" ] && echo "fstab not found" && exit
 
 echo "checking fstab $fstab for additional mount points"
 
+# If there's more than one file, this will simply concatinate them together
 cat ${fstab} | while read line; do
     set -- $line
 
