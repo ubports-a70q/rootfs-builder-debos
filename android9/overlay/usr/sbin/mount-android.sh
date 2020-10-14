@@ -32,6 +32,12 @@ parse_mount_flags() {
     echo $options
 }
 
+if [ -e /dev/.halium_jumpercable ]; then
+    echo "jumpercable boot detected, retriggering udev setup"
+    udevadm trigger --action=add
+    udevadm settle
+fi
+
 echo "checking for vendor mount point"
 
 sys_vendor="/sys/firmware/devicetree/base/firmware/android/fstab/vendor"
