@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # Work around resolver failure in debos' fakemachine
 mv /etc/resolv.conf /etc/resolv2.conf
