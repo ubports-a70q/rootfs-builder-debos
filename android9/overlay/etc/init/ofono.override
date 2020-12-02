@@ -6,4 +6,4 @@ stop on stopping dbus
 expect fork
 respawn
 
-exec ofonod -P provision,udev*,dun*,smart*,hfp_bluez5,stktest,sap
+exec ofonod -P udev*,dun*,smart*,hfp_bluez5,stktest,sap
