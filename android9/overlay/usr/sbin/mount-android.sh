@@ -58,8 +58,16 @@ if [ -e $sys_persist ]; then
     # [ ! -e "$path" ] && exit "Error persist not found"
     type=$(cat $sys_persist/type)
     options=$(parse_mount_flags $(cat $sys_persist/mnt_flags))
-    echo "mounting $path as /mnt/vendor/persist"
-    mount $path /mnt/vendor/persist -t $type -o $options
+    if [ -e $sys_persist/mnt_point ]; then
+        target=`cat $sys_persist/mnt_point`
+        echo "mounting $path as $target"
+        mount $path $target -t $type -o $options
+    else
+        # if there is no indication that persist should be mounted elsewhere, default to old location
+        echo "mounting $path as /persist and /mnt/vendor/persist"
+        mount $path /persist -t $type -o $options
+        mount $path /mnt/vendor/persist -t $type -o $options
+    fi
 fi
 
 # List all fstab files
