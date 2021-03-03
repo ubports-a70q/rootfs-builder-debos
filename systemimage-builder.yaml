@@ -18,7 +18,7 @@ actions:
   - action: image-partition
     description: Creating image
     imagename: {{ $image }}
-    imagesize: 14.6GiB
+    imagesize: 6GiB
     partitiontype: gpt
     mountpoints:
       - mountpoint: /cache
