@@ -1,0 +1,20 @@
+{{- $architecture := or .architecture "amd64" -}}
+{{- $image := or .image "ubuntu-touch-mainline-generic-amd64.img" -}}
+{{- $debug := or .debug "on" -}}
+
+architecture: {{ $architecture }}
+actions:
+  - action: recipe
+    description: Setup core rootfs
+    recipe: ../mainline-rootfs-core.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
+      debug: {{ $debug }}
+
+  - action: recipe
+    description: Polish the image
+    recipe: ../polish.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
