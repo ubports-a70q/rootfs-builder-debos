@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # Work around resolver failure in debos' fakemachine
 mv /etc/resolv.conf /etc/resolv2.conf
 echo "nameserver 1.1.1.1" > /etc/resolv.conf

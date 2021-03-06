@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 ARCH=$(dpkg --print-architecture)
 
 case $ARCH in
