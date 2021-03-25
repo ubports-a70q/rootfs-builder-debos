@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # Work around resolver failure in debos' fakemachine
 mv /etc/resolv.conf /etc/resolv2.conf
@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 export DEBCONF_NONINTERACTIVE_SEEN=true
 
 apt update
-apt install -y $@
+apt install -y "$@"
 
 # Undo changes to work around debos fakemachine resolver
 rm /etc/resolv.conf

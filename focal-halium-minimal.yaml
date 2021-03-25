@@ -1,0 +1,72 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $image := or .image "focal-halium-minimal.tar.gz" -}}
+{{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
+{{- $rootpasswd := or .rootpasswd "" }}
+
+architecture: {{ $architecture }}
+actions:
+  - action: download
+    description: Download Ubuntu Base, so that we don't have to run debootstrap
+    url: "{{ $cdimagesmirror }}/ubuntu-base/releases/focal/release/ubuntu-base-20.04.2-base-{{ $architecture }}.tar.gz"
+    unpack: false
+    filename: ubuntu-base.tar.gz
+    name: ubuntu-base.tar.gz
+
+  - action: unpack
+    description: Unpacking rootfs
+    origin: ubuntu-base.tar.gz
+    compression: gz
+
+{{ if ne $rootpasswd "" }}
+  - action: run
+    chroot: true
+    description: Setting password on root user
+    command: echo root:{{ $rootpasswd }} | chpasswd
+{{ end }}
+
+  - action: download
+    description: Download UBports keyring
+    url: https://repo.ubports.com/keyring.gpg
+    name: keyring
+
+  - action: overlay
+    description: Add UBports keyring to the rootfs
+    origin: keyring
+    destination: /etc/apt/trusted.gpg.d/ubports.gpg
+
+  - action: run
+    description: Add UBports focal repo
+    # Note, this operation also updates packages in base image.
+    chroot: true
+    script: ./scripts/add-and-pin-repo.sh http://repo2.ubports.com/ focal 2000
+
+  - action: run
+    description: Install minimal debugging things
+    chroot: true
+    script: >-
+      ./scripts/apt-install.sh
+      ubuntu-minimal ubuntu-standard
+      wpasupplicant openssh-server rfkill
+      hybris-usb lxc-android-config
+  # TODO: remove OpenSSH host keys and make it re-generate them on first boot.
+
+  - action: run
+    description: Enable hybris-usb
+    chroot: true
+    command: >-
+      systemctl disable isc-dhcp-server.service isc-dhcp-server6.service &&
+      systemctl enable usb-tethering.service
+
+  - action: run
+    description: Mark R/W
+    chroot: true
+    command: touch /.writable_image
+
+  - action: run
+    description: Temporary disable writable-paths
+    chroot: true
+    command: mv /etc/system-image/writable-paths /etc/system-image/writable-paths.temporary_disabled
+
+  - action: pack
+    file: {{ $image }}
+    compression: gz
