@@ -8,6 +8,11 @@ actions:
     description: Adding mods overlay
     destination: /
 
+  - action: run
+    description: Disable HWE
+    chroot: true
+    command: rm -f /etc/apt/sources.list.d/ubuntu-esm-infra.list
+
 {{ if eq $debug "on" }}
   - action: run
     chroot: true

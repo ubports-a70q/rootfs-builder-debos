@@ -4,4 +4,10 @@ This folder contains configuration for custom amd64 device images that don't wor
 
 ## Generic
 
-The Generic configuration creates an EFI/Legacy bootable image for amd64 devices.
+The `generic.yaml` configuration creates an EFI/Legacy bootable image for amd64 devices.
+
+## Surface Go
+
+The `surfacego.yaml` config installs the surface-linux kernel and firmware for the Microsoft Surface Go. Unfortunately, it cannot be booted with UEFI Secure Boot.
+
+https://github.com/linux-surface/linux-surface/wiki/Surface-Go

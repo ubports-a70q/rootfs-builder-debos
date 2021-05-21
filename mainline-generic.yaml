@@ -19,7 +19,7 @@ actions:
   - action: image-partition
     description: Creating image
     imagename: {{ $image }}
-    imagesize: 4GB
+    imagesize: 5GB
     partitiontype: msdos
     mountpoints:
       - mountpoint: /
@@ -37,11 +37,13 @@ actions:
         fs: ext4
         start: 50M
         end: 100%
+        features:
+          - "^metadata_csum"
 
   - action: run
     description: Install deps
     chroot: true
-    script: ./scripts/apt-install.sh linux-base linux-firmware grub-pc-bin grub-efi-amd64-signed shim-signed linux-generic-hwe-16.04
+    script: ./scripts/apt-install.sh grub-pc-bin grub-efi-amd64-signed shim-signed
 
   - action: filesystem-deploy
     description: Deploying filesystem into image

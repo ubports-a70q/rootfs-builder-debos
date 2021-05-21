@@ -6,11 +6,21 @@ architecture: {{ $architecture }}
 actions:
   - action: recipe
     description: Setup core rootfs
-    recipe: ../mainline-rootfs-core.yaml
+    recipe: ../mainline-generic.yaml
     variables:
       architecture: {{ $architecture }}
       image: {{ $image }}
       debug: {{ $debug }}
+
+  - action: run
+    description: Install Linux kernel and firmware
+    chroot: true
+    script: ../scripts/apt-install.sh linux-base linux-firmware linux-generic-hwe-16.04
+
+  - action: run
+    description: Update grub config
+    chroot: true
+    command: update-grub
 
   - action: recipe
     description: Polish the image

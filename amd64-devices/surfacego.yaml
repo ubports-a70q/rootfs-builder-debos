@@ -1,0 +1,55 @@
+{{- $architecture := or .architecture "amd64" -}}
+{{- $image := or .image "ubuntu-touch-mainline-surfacego-amd64.img" -}}
+{{- $debug := or .debug "on" -}}
+
+architecture: {{ $architecture }}
+actions:
+  - action: recipe
+    description: Setup core rootfs
+    recipe: ../mainline-generic.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
+      debug: {{ $debug }}
+
+  - action: run
+    description: Install apt-transport-https
+    chroot: true
+    script: ../scripts/apt-install.sh apt-transport-https
+
+  - action: run
+    description: Install surface-linux key
+    chroot: true
+    command: wget -qO - https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
+
+  - action: run
+    description: Install surface-linux key
+    chroot: true
+    command: echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
+
+  - action: run
+    description: Install surface-linux and drivers
+    chroot: true
+    script: ../scripts/apt-install.sh linux-image-surface linux-headers-surface libwacom-surface surface-ath10k-firmware-override
+
+  - action: run
+    description: Update grub config
+    chroot: true
+    command: update-grub
+
+  - action: run
+    description: Enable tty1
+    chroot: true
+    command: rm /etc/init/tty1.override
+
+  - action: overlay
+    source: surfacego/
+    description: Adding Surface Go overlay
+    destination: /
+
+  - action: recipe
+    description: Polish the image
+    recipe: ../polish.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
