@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # This is a hack to fix the damn network problems with debos/fakemachine
 
 # Work around resolver failure in debos' fakemachine
@@ -9,7 +11,7 @@ echo "nameserver 1.1.1.1" > /etc/resolv.conf
 mkdir -p /var/tmp/inst
 cd /var/tmp/inst
 wget $1
-dpkg -i *.deb
+sudo apt install -y ./*.deb
 rm -r /var/tmp/inst
 
 # Undo changes to work around debos fakemachine resolver
