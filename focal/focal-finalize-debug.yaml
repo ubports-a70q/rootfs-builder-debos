@@ -1,5 +1,6 @@
 {{- $architecture := or .architecture "arm64" -}}
 {{- $image := or .image "focal.tar.gz" -}}
+{{- $phablet_password := or .phablet_password "" }}
 
 architecture: {{ $architecture }}
 actions:
@@ -12,6 +13,13 @@ actions:
     description: Temporary disable writable-paths
     chroot: true
     command: mv /etc/system-image/writable-paths /etc/system-image/writable-paths.temporary_disabled
+
+{{ if $phablet_password }}
+  - action: run
+    description: Set a first-time password for phablet user
+    chroot: true
+    command: echo phablet:{{ $phablet_password }} | chpasswd
+{{ end }}
 
   - action: pack
     file: {{ $image }}
