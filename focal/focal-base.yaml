@@ -1,5 +1,8 @@
 {{- $architecture := or .architecture "arm64" -}}
 {{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
+# Due to Go template's limitations in distinguish empty value from boolean,
+# the default for this has to be false, hence the name.
+{{- $skip_remove_apt_user := or .skip_remove_apt_user false }}
 
 architecture: {{ $architecture }}
 actions:
@@ -31,3 +34,11 @@ actions:
     chroot: true
     script: ../scripts/add-and-pin-repo.sh http://repo2.ubports.com/ focal 2000
     label: add-and-pin-repo.sh
+
+{{ if not $skip_remove_apt_user }}
+  - action: run
+    description: Remove _apt user, due to Android's kernel config.
+    chroot: true
+    script: userdel _apt
+    label: userdel
+{{ end }}
