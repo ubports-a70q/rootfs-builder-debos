@@ -42,7 +42,7 @@ actions:
   - action: run
     description: Install deps
     chroot: true
-    script: ./scripts/add-and-pin-repo.sh xenial_-_edge_-_mesa_-_librem 3000
+    script: ./scripts/add-and-pin-repo.sh http://repo.ubports.com/ xenial_-_edge_-_mesa_-_librem 3000
 
   - action: run
     chroot: true
