@@ -1,0 +1,10 @@
+#!/bin/sh -x
+
+# As Lomiri's wizard requires lomiri-system-settings, and that's not working yet,
+# we temporary disable wizard so that Lomiri functions as expected.
+# This is done as a hook instead of an overlay because it requires the user's home
+# directory to be setup first with the appropriate permission.
+
+# TODO: check with Lomiri's renaming again.
+mkdir -p /home/phablet/.config/lomiri-system-settings
+touch /home/phablet/.config/lomiri-system-settings/wizard-has-run
