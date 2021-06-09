@@ -1,0 +1,6 @@
+#!/bin/sh -x
+
+# For some reason getty@tty1.service hangs on some devices (e.g. FP2). As we don't
+# need it anyway, we might as well disable it.
+
+systemctl disable getty@tty1.service
