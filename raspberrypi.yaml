@@ -12,6 +12,8 @@ actions:
     variables:
       architecture: {{ $architecture }}
       debug: {{ $debug }}
+      # Add recent fix from mainline-generic.yaml
+      imagesuffix: -mainline-edge
 
   # Add the linux-firmware package
   - action: recipe
