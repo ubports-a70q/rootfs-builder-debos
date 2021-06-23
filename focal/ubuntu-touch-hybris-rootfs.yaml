@@ -19,12 +19,9 @@ actions:
     chroot: true
     script: >-
       ../scripts/add-and-pin-repo.sh
-      http://repo2.ubports.com/ focal_-_PR_lomiri-app-launch_9 2001
-      http://repo2.ubports.com/ focal_-_PR_indicator-network_1 2001
       http://repo2.ubports.com/ focal_-_PR_lomiri_8 2001
       http://repo2.ubports.com/ focal_-_PR_ubuntu-touch-session_18 2001
       http://repo2.ubports.com/ focal_-_PR_repowerd_28 2001
-    # TODO: maybe qtubuntu-gles
     label: add-and-pin-repo.sh
 
     # TODO: should have a task pacakge at some point.
