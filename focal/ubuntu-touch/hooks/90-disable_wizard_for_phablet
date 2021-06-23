@@ -5,6 +5,5 @@
 # This is done as a hook instead of an overlay because it requires the user's home
 # directory to be setup first with the appropriate permission.
 
-# TODO: check with Lomiri's renaming again.
-mkdir -p /home/phablet/.config/lomiri-system-settings
-touch /home/phablet/.config/lomiri-system-settings/wizard-has-run
+mkdir -p /home/phablet/.config/lomiri
+touch /home/phablet/.config/lomiri/wizard-has-run
