@@ -32,7 +32,7 @@ actions:
       ../scripts/apt-install.sh --no-install-recommends
       ubuntu-minimal ubuntu-standard
       network-manager openssh-server hybris-usb lxc-android-config
-      ubuntu-touch-session libnss-extrausers
+      ubuntu-touch-session lomiri-indicator-network libnss-extrausers
       libqt5gui5-gles libqt5gui5-
       mir-graphics-drivers-android mir-graphics-drivers-android-caf
       repowerd
