@@ -5,5 +5,7 @@
 # This is done as a hook instead of an overlay because it requires the user's home
 # directory to be setup first with the appropriate permission.
 
-mkdir -p /home/phablet/.config/lomiri
-touch /home/phablet/.config/lomiri/wizard-has-run
+su phablet -c '
+    mkdir -p /home/phablet/.config/lomiri
+    touch /home/phablet/.config/lomiri/wizard-has-run
+'
