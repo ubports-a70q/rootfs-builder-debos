@@ -34,6 +34,7 @@ actions:
       network-manager openssh-server hybris-usb lxc-android-config
       ubuntu-touch-session lomiri-indicator-network libnss-extrausers
       libqt5gui5-gles libqt5gui5- qtwayland5
+      qml-module-qtquick-controls2
       mir-graphics-drivers-android mir-graphics-drivers-android-caf
       repowerd
       nano bash-completion
