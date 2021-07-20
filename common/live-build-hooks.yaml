@@ -1,0 +1,41 @@
+# All variable templates are required, and thus defaults won't be given.
+
+architecture: {{ .architecture }}
+actions:
+  - action: recipe
+    description: Download live-build package
+    recipe: download-and-extract-deb.yaml
+    variables:
+      architecture: {{ .architecture }}
+      deb_url: http://archive.ubuntu.com/ubuntu/pool/main/l/live-build/live-build_3.0~a57-1ubuntu38.20.04.2_all.deb
+      deb_extract_target: /tmp/live-build
+
+  - action: run
+    description: Copy requested hooks to chroot
+    chroot: false
+    label: script
+    command: |
+      set -e
+
+      LOCATION=/tmp/live-build/usr/share/live/build/hooks
+      for _HOOK in {{ .lb_chroot_hooks }}; do
+        for FILE in "${LOCATION}"/???-"${_HOOK}".chroot; do
+          if [ -e "${FILE}" ]
+          then
+            mkdir -p $ROOTDIR/root/lb_chroot_hooks
+            cp -v "${FILE}" $ROOTDIR/root/lb_chroot_hooks
+          fi
+        done
+      done
+
+  - action: run
+    description: Run hooks inside chroot
+    chroot: true
+    label: run-parts
+    command: run-parts --verbose --exit-on-error --regex='.*\.chroot' -- "/root/lb_chroot_hooks"
+
+  - action: run
+    description: Cleanup
+    chroot: false
+    label: rm
+    command: rm -rvf $ROOTDIR/root/lb_chroot_hooks && rm -rf /tmp/live-build
