@@ -37,6 +37,19 @@ actions:
     source: ./ubuntu-touch/overlay
     destination: /
 
+  - action: recipe
+    description: Run selected hooks from live-build
+    recipe: ../common/live-build-hooks.yaml
+    variables:
+      architecture: {{ $architecture }}
+      lb_chroot_hooks: >-
+        update-apt-xapian-index
+        update-mlocate-database
+        remove-dbus-machine-id
+        remove-openssh-server-host-keys
+        remove-udev-persistent-rules
+        remove-python-py
+
   - action: run
     descriptions: Run Ubuntu Touch hooks
     chroot: true
