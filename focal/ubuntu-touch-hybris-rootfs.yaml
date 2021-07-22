@@ -15,6 +15,12 @@ actions:
       skip_remove_apt_user: false
       additional_apt_repos: {{ $additional_apt_repos }}
 
+  - action: run
+    descriptions: Run Ubuntu Touch early hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early
+    label: run-parts
+
     # TODO: should have a task pacakge at some point.
   - action: run
     description: Install packages
