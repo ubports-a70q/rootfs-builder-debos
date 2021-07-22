@@ -53,7 +53,7 @@ actions:
   - action: run
     descriptions: Run Ubuntu Touch hooks
     chroot: true
-    script: ./ubuntu-touch/hooks/run-hooks.sh
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot
     label: run-parts
 
   - action: recipe
