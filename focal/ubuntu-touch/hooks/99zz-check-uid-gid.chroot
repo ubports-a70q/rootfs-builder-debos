@@ -46,9 +46,7 @@ if [ -n "$ERRCNT" ]; then
 	echo "Please check also if a maintainer script of the package" >&2
 	echo "that added these entries perhaps created a home directory and," >&2
 	echo "if needed, add code for creation of it to the above hook" >&2
-	# Temp remove until we find a better method then updating this eveytime we change something	
-	# TODO
-        #exit 1
+    exit 1
 fi
 
 echo "ownership of /var/log after build:" >&2
