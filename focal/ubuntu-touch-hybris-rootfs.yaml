@@ -12,7 +12,7 @@ actions:
     variables:
       architecture: {{ $architecture }}
       cdimagesmirror: {{ $cdimagesmirror }}
-      skip_remove_apt_user: false
+      skip_remove_apt_user: true
       additional_apt_repos: {{ $additional_apt_repos }}
 
   - action: run
