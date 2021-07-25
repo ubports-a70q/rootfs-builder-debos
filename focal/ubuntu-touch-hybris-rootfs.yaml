@@ -63,8 +63,8 @@ actions:
     label: run-parts
 
   - action: recipe
-    description: Finalizing image in debug mode.
-    recipe: focal-finalize-debug.yaml
+    description: Finalizing image in for system-image consumption.
+    recipe: focal-finalize-system-image.yaml
     variables:
       architecture: {{ $architecture }}
       image: {{ $image }}
