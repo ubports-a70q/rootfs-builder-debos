@@ -1,0 +1,6 @@
+#!/bin/sh -ex
+
+# For simplicity, we want /var/lib/dbus/machine-id to points to /etc/machine-id.
+# Sometimes it happens, sometimes it doesn't. So, let's force it here.
+
+ln -sf /etc/machine-id /var/lib/dbus/machine-id
