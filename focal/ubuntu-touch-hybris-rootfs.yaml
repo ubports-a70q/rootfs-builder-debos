@@ -1,6 +1,7 @@
 {{- $architecture := or .architecture "arm64" -}}
 {{- $image := or .image (printf "ubuntu-touch-hybris-rootfs-%s.tar.gz" $architecture) -}}
 {{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
+{{- $additional_apt_repos := or .additional_apt_repos "" -}}
 {{- $phablet_password := or .phablet_password "" }}
 
 architecture: {{ $architecture }}
@@ -12,17 +13,7 @@ actions:
       architecture: {{ $architecture }}
       cdimagesmirror: {{ $cdimagesmirror }}
       skip_remove_apt_user: false
-
-  - action: run
-    description: "[Temporary] add WIP repos"
-    # Note, this operation also updates packages in base image.
-    chroot: true
-    script: >-
-      ../scripts/add-and-pin-repo.sh
-      http://repo2.ubports.com/ focal_-_PR_lomiri_8 2001
-      http://repo2.ubports.com/ focal_-_PR_ubuntu-touch-session_18 2001
-      http://repo2.ubports.com/ focal_-_PR_repowerd_28 2001
-    label: add-and-pin-repo.sh
+      additional_apt_repos: {{ $additional_apt_repos }}
 
     # TODO: should have a task pacakge at some point.
   - action: run
