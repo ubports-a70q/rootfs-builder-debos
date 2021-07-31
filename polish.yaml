@@ -8,7 +8,7 @@ actions:
   - action: run
     description: Remove apt caches to save space
     chroot: true
-    command: rm -r /var/cache/apt/*
+    command: rm -r /var/cache/apt/* /var/lib/apt/lists/*
 
   # This must be the final 'chroot: true' action in the recipe, or else
   # /etc/localtime will be deleted by systemd-nspawn.

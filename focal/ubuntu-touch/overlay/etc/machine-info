@@ -1,0 +1,3 @@
+# This is temporary until we have a way to automatically detect this.
+# This will let Lomiri behaves in a way appropriate for phones.
+CHASSIS=handset

@@ -1,0 +1,24 @@
+{{- $phablet_password := or .phablet_password "" }}
+
+architecture: {{ .architecture }}
+actions:
+  {{ if $phablet_password }}
+  - action: run
+    description: Set the first-time password for phablet user
+    chroot: true
+    command: echo phablet:{{ $phablet_password }} | chpasswd
+  {{ end }}
+
+  # polish.yaml must be run as the last step, as it contains the
+  # step to (re-)create /etc/writable symlinks and systemd-nspawn
+  # tends to overwrite them.
+  - action: recipe
+    description: Run common image polishing steps
+    recipe: ../polish.yaml
+    variables:
+      architecture: {{ .architecture }}
+      output_type: tarball
+
+  - action: pack
+    file: {{ .image }}
+    compression: gz

@@ -1,0 +1,24 @@
+# All variable templates are required, and thus defaults won't be given.
+
+architecture: {{ .architecture }}
+actions:
+  - action: download
+    description: Download the deb
+    url: {{ .deb_url }}
+    filename: pkg.deb
+    name: pkg.deb
+
+  - action: run
+    description: extract the deb to the directory
+    chroot: false
+    label: script
+    command: |
+      set -ex
+
+      WORKDIR=$(mktemp -d)
+      ar -xv --output "$WORKDIR" /scratch/pkg.deb data.tar.xz
+
+      mkdir -p {{ .deb_extract_target }}
+      tar -C "{{ .deb_extract_target }}" -xf "${WORKDIR}/data.tar.xz"
+
+      rm -r "$WORKDIR" /scratch/pkg.deb

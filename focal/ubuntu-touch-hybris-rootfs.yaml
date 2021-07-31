@@ -1,0 +1,72 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $image := or .image (printf "ubuntu-touch-hybris-rootfs-%s.tar.gz" $architecture) -}}
+{{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
+{{- $additional_apt_repos := or .additional_apt_repos "" -}}
+{{- $phablet_password := or .phablet_password "" }}
+
+architecture: {{ $architecture }}
+actions:
+  - action: recipe
+    description: Setup base rootfs
+    recipe: focal-base.yaml
+    variables:
+      architecture: {{ $architecture }}
+      cdimagesmirror: {{ $cdimagesmirror }}
+      skip_remove_apt_user: true
+      additional_apt_repos: {{ $additional_apt_repos }}
+
+  - action: run
+    descriptions: Run Ubuntu Touch early hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early
+    label: run-parts
+
+    # TODO: should have a task pacakge at some point.
+  - action: run
+    description: Install packages
+    chroot: true
+    script: >-
+      ../scripts/apt-install.sh --no-install-recommends
+      ubuntu-minimal ubuntu-standard
+      network-manager openssh-server hybris-usb lxc-android-config
+      ubuntu-touch-session lomiri-indicator-network libnss-extrausers
+      lomiri-keyboard lomiri-keyboard-english
+      libqt5gui5-gles libqt5gui5- qtwayland5 qtubuntu-android
+      qml-module-qtquick-controls2
+      mir-graphics-drivers-android mir-graphics-drivers-android-caf
+      repowerd
+      nano bash-completion
+      ubports-qa-scripts
+    label: apt-install.sh
+
+  - action: overlay
+    description: Add Ubuntu Touch overlays
+    source: ./ubuntu-touch/overlay
+    destination: /
+
+  - action: recipe
+    description: Run selected hooks from live-build
+    recipe: ../common/live-build-hooks.yaml
+    variables:
+      architecture: {{ $architecture }}
+      lb_chroot_hooks: >-
+        update-apt-xapian-index
+        update-mlocate-database
+        remove-dbus-machine-id
+        remove-openssh-server-host-keys
+        remove-udev-persistent-rules
+        remove-python-py
+
+  - action: run
+    descriptions: Run Ubuntu Touch hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot
+    label: run-parts
+
+  - action: recipe
+    description: Finalizing image in for system-image consumption.
+    recipe: focal-finalize-system-image.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
+      phablet_password: {{ $phablet_password }}
