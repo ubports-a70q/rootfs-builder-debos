@@ -1,0 +1,8 @@
+#!/bin/sh -ex
+
+# Systemd runs various services under the dedicated users. Because we're running
+# on Android kernel/udev rules, we need to give those users an appropriate
+# permission by adding them to groups.
+
+# systemd-resolved requires internet access to resolve DNS.
+usermod -a -G android_net systemd-resolve
