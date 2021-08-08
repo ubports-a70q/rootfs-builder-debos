@@ -8,7 +8,7 @@ find_partition_path() {
     label=$1
     path="/dev/$label"
     # In case fstab provides /dev/mmcblk0p* lines
-    for dir in by-partlabel by-name by-label by-path by-uuid by-partuuid by-id; do
+    for dir in by-partlabel by-name by-label ../mapper by-path by-uuid by-partuuid by-id; do
         # On A/B systems not all of the partitions are duplicated, so we have to check with and without suffix
         if [ -e "/dev/disk/$dir/$label$ab_slot_suffix" ]; then
             path="/dev/disk/$dir/$label$ab_slot_suffix"
