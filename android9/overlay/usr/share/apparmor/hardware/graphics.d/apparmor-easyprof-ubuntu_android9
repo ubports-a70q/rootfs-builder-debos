@@ -12,6 +12,8 @@
 /{,android/}system/vendor/lib{,64}/**.so m,
 /{,android/}vendor/lib{,64}/**           r,
 /{,android/}vendor/lib{,64}/**.so        m,
+/{,android/}apex/com.android.runtime/lib{,64}/**     r,
+/{,android/}apex/com.android.runtime/lib{,64}/**.so  m,
 
 # Allow access to build.prop, properties and logging daemon
 /dev/__properties__/*          r,
