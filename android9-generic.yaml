@@ -20,10 +20,12 @@ actions:
     filename: ut-rootfs.tar.gz
     name: ut-rootfs.tar.gz
 
-  - action: unpack
+  # Instead of an unpack action we use a run action here as a workaround to
+  # https://github.com/go-debos/debos/issues/286 and
+  # https://gitlab.com/ubports/community-ports/android10/project-management/-/issues/9
+  - action: run
     description: Unpacking rootfs
-    origin: ut-rootfs.tar.gz
-    compression: gz
+    command: tar --numeric-owner -xzf ut-rootfs.tar.gz -C root
 
   - action: run
     chroot: true
