@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -x
+LOCATION="$(dirname "$(readlink -f "$0")")"
+IMAGE="local/debos-ubports:1"
+
+if [ -z $NOINTERACTIVE ]; then
+        INTERACTIVE_ARG='--interactive'
+else
+        INTERACTIVE_ARG=''
+fi
+
+if ! podman inspect --type=image ${IMAGE} > /dev/null 2>&1; then
+	podman build -t ${IMAGE} ${LOCATION} -f ${LOCATION}/Dockerfile
+fi
+
+podman run --net=host --rm $INTERACTIVE_ARG --tty \
+        --device /dev/kvm \
+        --workdir /recipes \
+        -v $(pwd):/recipes:z \
+        --group-add keep-groups \
+        --security-opt label=disable \
+        ${IMAGE} "$@"
