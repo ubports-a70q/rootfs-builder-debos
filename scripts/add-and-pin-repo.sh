@@ -34,9 +34,9 @@ if [ "$#" != 0 ]; then
     exit 1
 fi
 
-apt update
-apt upgrade -y --allow-downgrades
-apt autoremove -y
+apt-get update
+apt-get upgrade -y --allow-downgrades
+apt-get autoremove -y
 
 # Undo changes to work around debos fakemachine resolver
 rm /etc/resolv.conf
