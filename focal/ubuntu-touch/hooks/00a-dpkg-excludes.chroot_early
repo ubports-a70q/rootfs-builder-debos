@@ -1,0 +1,32 @@
+#!/bin/sh -eux
+
+# Ubuntu Base comes with /etc/dpkg/dpkg.cfg.d/excludes which excludes things
+# not useful for embeded system, like us. However, we want to not-exclude
+# something (translations) while exclude a few more things.
+#
+# Run this before installing more software to be most effective.
+
+# Rename Ubuntu Base's file, to make sure ours comes later.
+mv /etc/dpkg/dpkg.cfg.d/excludes /etc/dpkg/dpkg.cfg.d/01-ubuntu-base-excludes
+
+# And now, our includes and excludes.
+
+cat >/etc/dpkg/dpkg.cfg.d/02-ubuntu-touch-includes-excludes <<EOF
+# Ubuntu Touch interacts with users, thus we don't want to exclude translation.
+# Note that this intentionally contradicts 01-ubuntu-base-excludes.
+
+path-include=/usr/share/locale/*/LC_MESSAGES/*.mo
+
+# Exclude more things. This is based on 99-remove-documentation.chroot hook
+# for ubuntu-touch in rootfs-builder-debos.
+
+path-exclude=/usr/share/groff/*
+path-exclude=/usr/share/lintian/*
+path-exclude=/usr/share/linda/*
+EOF
+
+# Restore translations from packages which ship those. This includes re-installing apt,
+# which is why this script runs before 00b-uid-gid-fix.chroot_early.
+# Script copied from 'unminimize' script on ubuntu-base image.
+dpkg --verify --verify-format rpm | awk '/..5......   \/usr\/share\/locale/ {print $2}' | sed 's|/[^/]*$||' | sort | uniq \
+         | xargs dpkg -S | sed 's|, |\n|g;s|: [^:]*$||' | uniq | DEBIAN_FRONTEND=noninteractive xargs apt-get install --reinstall -y
