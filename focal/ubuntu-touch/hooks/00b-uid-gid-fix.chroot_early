@@ -325,6 +325,12 @@ echo "adjusting ownership of /var/log" >&2
 chown root:syslog /var/log
 ls -ln /var | grep log >&2
 
+# /var/cache/apt/archives/partials is owned by _apt, but the passwd override
+# removes it. Adjust the ownership back to root, as _apt's UID is now used
+# by syslog.
+echo "adjusting ownership of /var/cache/apt/"
+chown --recursive root:root /var/cache/apt
+
 # Record the current state for later comparison
 for file in /etc/passwd /etc/shadow /etc/group /etc/gshadow; do
     rm -f ${file}-
