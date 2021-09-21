@@ -5,14 +5,16 @@
 # the default for this has to be false, hence the name.
 {{- $skip_remove_apt_user := or .skip_remove_apt_user false }}
 
+{{- $ubuntu_base := print "ubuntu-base-20.04.2-base-" $architecture ".tar.gz" }}
+
 architecture: {{ $architecture }}
 actions:
   - action: download
     description: Download Ubuntu Base, so that we don't have to run debootstrap
-    url: "{{ $cdimagesmirror }}/ubuntu-base/releases/focal/release/ubuntu-base-20.04.2-base-{{ $architecture }}.tar.gz"
+    url: "{{ $cdimagesmirror }}/ubuntu-base/releases/focal/release/{{ $ubuntu_base }}"
     unpack: false
-    filename: ubuntu-base-20.04.2-base-{{ $architecture }}.tar.gz
-    name: ubuntu-base.tar.gz
+    filename: {{ $ubuntu_base }}
+    name: {{ $ubuntu_base }}
 
   - action: download
     description: Download SHA256SUMS from Ubuntu's CDImage server
@@ -26,10 +28,12 @@ actions:
     command: cd /scratch && sha256sum --check --ignore-missing SHA256SUMS
     label: sha256sum
 
-  - action: unpack
+  # Instead of an unpack action we use a run action here as a workaround to
+  # https://github.com/go-debos/debos/issues/286 and
+  # https://gitlab.com/ubports/community-ports/android10/project-management/-/issues/9
+  - action: run
     description: Unpacking rootfs
-    origin: ubuntu-base.tar.gz
-    compression: gz
+    command: tar --numeric-owner -xzf {{ $ubuntu_base }} -C root
 
   - action: download
     description: Download UBports keyring
