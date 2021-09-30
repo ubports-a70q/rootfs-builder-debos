@@ -31,6 +31,8 @@ actions:
       network-manager openssh-server hybris-usb lxc-android-config
       ubuntu-touch-session lomiri-indicator-network libnss-extrausers
       lomiri-keyboard lomiri-keyboard-english
+      lomiri-system-settings lomiri-system-settings-system-update
+      system-image-cli system-image-dbus
       libqt5gui5-gles libqt5gui5- qtwayland5 qtubuntu-android
       qml-module-qtquick-controls2
       mir-graphics-drivers-android mir-graphics-drivers-android-caf
