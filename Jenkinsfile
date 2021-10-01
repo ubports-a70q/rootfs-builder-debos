@@ -1,8 +1,10 @@
+String cron_string = BRANCH_NAME == 'master' ? 'H 3 * * *' : ''
+
 pipeline {
   agent none
   triggers {
     // Trigger once a day between 3AM and 4AM
-    cron('H 3 * * *')
+    cron(cron_string)
   }
   options {
     buildDiscarder(logRotator(artifactNumToKeepStr: '30', numToKeepStr: '180'))
