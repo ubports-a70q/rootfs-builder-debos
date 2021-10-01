@@ -35,6 +35,10 @@ actions:
       qml-module-qtquick-controls2
       mir-graphics-drivers-android mir-graphics-drivers-android-caf
       repowerd
+      pulseaudio
+      pulseaudio-modules-droid-24 pulseaudio-modules-droid-28
+      pulseaudio-modules-droid-glue-24 pulseaudio-modules-droid-glue-28
+      pulseaudio-modules-droid-hidl-28 pulseaudio-module-droid-discover
       nano bash-completion
       ubports-qa-scripts
     label: apt-install.sh
