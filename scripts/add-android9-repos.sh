@@ -23,17 +23,17 @@ if [ "$CHANNEL" == "edge" ]; then
     echo "Pin-Priority: 2020" >> /etc/apt/preferences.d/ubports-android9.pref
 fi
 
-apt update
-apt upgrade -y --allow-downgrades
+apt-get update
+apt-get upgrade -y --allow-downgrades
 
-apt install -y bluebinder ofono-ril-binder-plugin pulseaudio-modules-droid-28
+apt-get install -y bluebinder ofono-ril-binder-plugin pulseaudio-modules-droid-28
 # sensorfw
-apt remove -y qtubuntu-sensors
-apt install -y libsensorfw-qt5-hybris libsensorfw-qt5-configs libsensorfw-qt5-plugins libqt5sensors5-sensorfw qtubuntu-position
+apt-get remove -y qtubuntu-sensors
+apt-get install -y libsensorfw-qt5-hybris libsensorfw-qt5-configs libsensorfw-qt5-plugins libqt5sensors5-sensorfw qtubuntu-position
 # hfd-service
-apt install -y hfd-service libqt5feedback5-hfd hfd-service-tools
+apt-get install -y hfd-service libqt5feedback5-hfd hfd-service-tools
 # in-call audio
-apt install -y pulseaudio-modules-droid-hidl-28 audiosystem-passthrough
+apt-get install -y pulseaudio-modules-droid-hidl-28 audiosystem-passthrough
 
 # Restore symlink
 rm /etc/resolv.conf

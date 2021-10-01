@@ -29,11 +29,11 @@ echo "Pin: origin repo.ubports.com" >> /etc/apt/preferences.d/ubports.pref
 echo "Pin: release o=UBports,a=xenial_-_edge_-_wayland" >> /etc/apt/preferences.d/ubports.pref
 echo "Pin-Priority: 2002" >> /etc/apt/preferences.d/ubports.pref
 
-apt update
-apt upgrade -y --allow-downgrades
-apt autoremove -y
+apt-get update
+apt-get upgrade -y --allow-downgrades
+apt-get autoremove -y
 
-apt install ubuntu-touch-session-wayland libgbm1 libgl1-mesa-dri hfd-service libqt5feedback5-hfd -y
+apt-get install ubuntu-touch-session-wayland libgbm1 libgl1-mesa-dri hfd-service libqt5feedback5-hfd -y
 
 # Undo changes to work around debos fakemachine resolver
 rm /etc/resolv.conf
