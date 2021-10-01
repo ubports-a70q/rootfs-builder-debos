@@ -5,7 +5,7 @@
 # the default for this has to be false, hence the name.
 {{- $skip_remove_apt_user := or .skip_remove_apt_user false }}
 
-{{- $ubuntu_base := print "ubuntu-base-20.04.2-base-" $architecture ".tar.gz" }}
+{{- $ubuntu_base := print "ubuntu-base-20.04.3-base-" $architecture ".tar.gz" }}
 
 architecture: {{ $architecture }}
 actions:
@@ -19,7 +19,7 @@ actions:
   - action: download
     description: Download SHA256SUMS from Ubuntu's CDImage server
     # Don't use mirror - do use HTTPS.
-    url: https://cdimage.ubuntu.com/ubuntu-base/releases/20.04.2/release/SHA256SUMS
+    url: https://cdimage.ubuntu.com/ubuntu-base/releases/focal/release/SHA256SUMS
     filename: SHA256SUMS
     name: SHA256SUMS
 
