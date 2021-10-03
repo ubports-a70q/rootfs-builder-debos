@@ -24,7 +24,7 @@ if [ "$CHANNEL" == "edge" ]; then
 fi
 
 apt-get update
-apt-get upgrade -y --allow-downgrades
+apt-get dist-upgrade -y --allow-downgrades
 
 apt-get install -y bluebinder ofono-ril-binder-plugin pulseaudio-modules-droid-28
 # sensorfw
