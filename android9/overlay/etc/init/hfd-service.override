@@ -1,0 +1,9 @@
+description "hfd service for feedback support"
+
+# The code to detect a started Android container only on Halium devices does not work on Halium 9 and later
+# So lets just wait for lxc-android-config
+start on started dbus and lxc-android-config
+stop on stopped dbus
+
+exec hfd-service
+
