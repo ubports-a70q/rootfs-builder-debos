@@ -24,10 +24,8 @@ if [ "$CHANNEL" == "edge" ]; then
 fi
 
 apt-get update
-apt-get upgrade -y --allow-downgrades
+apt-get dist-upgrade -y --allow-downgrades
 
-# hotfix for "The following packages have been kept back: ofono ofono-scripts powerd repowerd repowerd-data"
-apt-get install -y ofono ofono-scripts powerd repowerd
 apt-get install -y bluebinder ofono-ril-binder-plugin pulseaudio-modules-droid-28
 # sensorfw
 apt-get remove -y qtubuntu-sensors

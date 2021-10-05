@@ -35,7 +35,7 @@ if [ "$#" != 0 ]; then
 fi
 
 apt-get update
-apt-get upgrade -y --allow-downgrades
+apt-get dist-upgrade -y --allow-downgrades
 apt-get autoremove -y
 
 # Undo changes to work around debos fakemachine resolver
