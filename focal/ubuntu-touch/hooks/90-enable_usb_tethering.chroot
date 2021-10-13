@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -ex
 
 # USB tethering's service file comes disabled by default to avoid conflict
 # with ADBD. However, we haven't figured out ADB, so USB tethering is the
