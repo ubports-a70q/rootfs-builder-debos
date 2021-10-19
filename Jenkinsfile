@@ -15,6 +15,14 @@ def build_image = {
   archiveArtifacts(artifacts: '*.tar.gz,*.build', fingerprint: true, onlyIfSuccessful: true)
 }
 
+def check_for_changes = {
+  sh 'git branch --force master $(git show-ref -s origin/master)'
+  return sh (
+    returnStatus: true,
+    script: '! git diff --quiet $GIT_COMMIT origin/master -- focal/ scripts/ common/ Jenkinsfile'
+  )
+}
+
 pipeline {
   agent none
   triggers {
@@ -28,6 +36,13 @@ pipeline {
       parallel {
         stage('focal-hybris-arm64') {
           agent { label 'debos-amd64' }
+          when {
+            beforeAgent false
+            anyOf {
+              branch 'master'
+              expression { check_for_changes() == 0 }
+            }
+          }
           environment {
             RECIPE = 'focal/ubuntu-touch-hybris-rootfs.yaml'
             IMAGE = 'ubuntu-touch-hybris-rootfs-arm64.tar.gz'
@@ -44,6 +59,13 @@ pipeline {
         }
         stage('focal-hybris-armhf') {
           agent { label 'debos-amd64' }
+          when {
+            beforeAgent false
+            anyOf {
+              branch 'master'
+              expression { check_for_changes() == 0 }
+            }
+          }
           environment {
             RECIPE = 'focal/ubuntu-touch-hybris-rootfs.yaml'
             IMAGE = 'ubuntu-touch-hybris-rootfs-armhf.tar.gz'
