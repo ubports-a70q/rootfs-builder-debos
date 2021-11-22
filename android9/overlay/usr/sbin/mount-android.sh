@@ -48,15 +48,23 @@ for image in $vendor_images; do
     fi
 done
 
-sys_vendor="/sys/firmware/devicetree/base/firmware/android/fstab/vendor"
-if [ -e $sys_vendor ] && ! mountpoint -q -- /vendor; then
-    label=$(cat $sys_vendor/dev | awk -F/ '{print $NF}')
-    path=$(find_partition_path $label)
-    [ ! -e "$path" ] && echo "Error vendor not found" && exit
-    type=$(cat $sys_vendor/type)
-    options=$(parse_mount_flags $(cat $sys_vendor/mnt_flags))
+if ! mountpoint -q -- /vendor; then
+    sys_vendor="/sys/firmware/devicetree/base/firmware/android/fstab/vendor"
+    default_vendor=$(find_partition_path "vendor")
+    if [ -e $sys_vendor ]; then
+        label=$(awk -F/ '{print $NF}' < $sys_vendor/dev)
+        path=$(find_partition_path "$label")
+        [ ! -e "$path" ] && echo "Error vendor not found" && exit
+        type=$(cat $sys_vendor/type)
+        options=$(parse_mount_flags "$(cat "$sys_vendor/mnt_flags")")
+    elif [ -n "$default_vendor" ] && [ -e "$default_vendor" ]; then
+        # default to a partition labeled "vendor" even if not in DT fstab
+        path=$default_vendor
+        type=ext4
+        options=ro
+    fi
     echo "mounting $path as /vendor"
-    mount $path /vendor -t $type -o $options
+    mount "$path" /vendor -t "$type" -o "$options"
 fi
 
 # mount tmpfs for vendor mounts
