@@ -33,50 +33,42 @@ pipeline {
   }
   stages {
     stage('Rootfs builds') {
-      parallel {
-        stage('focal-hybris-arm64') {
-          agent { label 'debos-amd64' }
-          when {
-            beforeAgent false
-            anyOf {
-              branch 'master'
-              expression { check_for_changes() == 0 }
-            }
+      matrix {
+        agent none
+        axes {
+          axis {
+            name 'VARIANT'
+            values 'ubuntu-touch-hybris'
           }
-          environment {
-            RECIPE = 'focal/ubuntu-touch-hybris-rootfs.yaml'
-            IMAGE = 'ubuntu-touch-hybris-rootfs-arm64.tar.gz'
-            ARCHITECTURE = 'arm64'
-          }
-          steps {
-            script {build_image()}
-          }
-          post {
-            cleanup {
-              deleteDir()
-            }
+
+          axis {
+            name 'ARCHITECTURE'
+            values 'arm64', 'armhf'
           }
         }
-        stage('focal-hybris-armhf') {
-          agent { label 'debos-amd64' }
-          when {
-            beforeAgent false
-            anyOf {
-              branch 'master'
-              expression { check_for_changes() == 0 }
+
+        stages {
+          stage("Debos") {
+            agent { label 'debos-amd64' } // Yes, ARM images are built on AMD64 too.
+            when {
+              beforeAgent false
+              anyOf {
+                branch 'master'
+                expression { check_for_changes() == 0 }
+              }
             }
-          }
-          environment {
-            RECIPE = 'focal/ubuntu-touch-hybris-rootfs.yaml'
-            IMAGE = 'ubuntu-touch-hybris-rootfs-armhf.tar.gz'
-            ARCHITECTURE = 'armhf'
-          }
-          steps {
-            script {build_image()}
-          }
-          post {
-            cleanup {
-              deleteDir()
+            environment {
+              RECIPE = "focal/${VARIANT}-rootfs.yaml"
+              IMAGE = "${VARIANT}-rootfs-${ARCHITECTURE}.tar.gz"
+              ARCHITECTURE = "${ARCHITECTURE}"
+            }
+            steps {
+              script {build_image()}
+            }
+            post {
+              cleanup {
+                deleteDir()
+              }
             }
           }
         }
