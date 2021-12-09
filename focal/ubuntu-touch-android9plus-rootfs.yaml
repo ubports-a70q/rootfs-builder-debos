@@ -1,5 +1,6 @@
+{{- $variant := "android9plus" -}}
 {{- $architecture := or .architecture "arm64" -}}
-{{- $image := or .image (printf "ubuntu-touch-android9plus-rootfs-%s.tar.gz" $architecture) -}}
+{{- $image := or .image (printf "ubuntu-touch-%s-rootfs-%s.tar.gz" $variant $architecture) -}}
 {{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
 {{- $additional_apt_repos := or .additional_apt_repos "" -}}
 {{- $phablet_password := or .phablet_password "" }}
@@ -20,6 +21,7 @@ actions:
     recipe: ubuntu-touch-common.yaml
     variables:
       architecture: {{ $architecture }}
+      variant: {{ $variant }}
 
   - action: recipe
     description: Finalizing image in for system-image consumption.
