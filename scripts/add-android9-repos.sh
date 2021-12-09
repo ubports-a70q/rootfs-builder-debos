@@ -23,6 +23,10 @@ if [ "$CHANNEL" == "edge" ]; then
     echo "Pin-Priority: 2020" >> /etc/apt/preferences.d/ubports-android9.pref
 fi
 
+if [ -n "$APT_PROXY" ]; then
+    alias apt-get="apt-get -o Acquire::http::Proxy='$APT_PROXY'"
+fi
+
 apt-get update
 apt-get dist-upgrade -y --allow-downgrades
 

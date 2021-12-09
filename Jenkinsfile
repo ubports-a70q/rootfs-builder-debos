@@ -8,7 +8,7 @@ def build_image = {
       -m 2G \
       --scratchsize 10G \
       --cpus $(nproc --all) \
-      -e "http_proxy:http://$(ip route get 8.8.8.8 | head -1 | cut -d\' \' -f7):3142" \
+      -e "APT_PROXY:http://$(ip route get 8.8.8.8 | head -1 | cut -d\' \' -f7):3142" \
       -t "image:$IMAGE" -t "architecture:${ARCHITECTURE}"
   '''
   sh 'echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)_${ARCHITECTURE}_${GIT_BRANCH}_${BUILD_NUMBER}_${GIT_COMMIT}" | tee "${IMAGE}.build"'

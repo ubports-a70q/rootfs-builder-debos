@@ -34,6 +34,10 @@ if [ "$#" != 0 ]; then
     exit 1
 fi
 
+if [ -n "$APT_PROXY" ]; then
+    alias apt-get="apt-get -o Acquire::http::Proxy='$APT_PROXY'"
+fi
+
 apt-get update
 apt-get dist-upgrade -y --allow-downgrades
 apt-get autoremove -y
