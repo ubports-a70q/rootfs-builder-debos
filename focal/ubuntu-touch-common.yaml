@@ -1,0 +1,40 @@
+architecture: {{ .architecture }}
+actions:
+  - action: run
+    descriptions: Run Ubuntu Touch early hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early
+    label: run-parts
+
+  - action: run
+    description: Install packages
+    chroot: true
+    script: >-
+      ../scripts/apt-install.sh --no-install-recommends
+      ubuntu-touch-hybris
+      ubuntu-minimal
+    label: apt-install.sh
+
+  - action: overlay
+    description: Add Ubuntu Touch overlays
+    source: ./ubuntu-touch/overlay
+    destination: /
+
+  - action: recipe
+    description: Run selected hooks from live-build
+    recipe: ../common/live-build-hooks.yaml
+    variables:
+      architecture: {{ .architecture }}
+      lb_chroot_hooks: >-
+        update-apt-xapian-index
+        update-mlocate-database
+        remove-dbus-machine-id
+        remove-openssh-server-host-keys
+        remove-udev-persistent-rules
+        remove-python-py
+
+  - action: run
+    descriptions: Run Ubuntu Touch hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot
+    label: run-parts
