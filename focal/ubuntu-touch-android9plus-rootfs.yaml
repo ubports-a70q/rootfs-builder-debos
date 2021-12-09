@@ -1,0 +1,30 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $image := or .image (printf "ubuntu-touch-android9plus-rootfs-%s.tar.gz" $architecture) -}}
+{{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
+{{- $additional_apt_repos := or .additional_apt_repos "" -}}
+{{- $phablet_password := or .phablet_password "" }}
+
+architecture: {{ $architecture }}
+actions:
+  - action: recipe
+    description: Setup base rootfs
+    recipe: focal-base.yaml
+    variables:
+      architecture: {{ $architecture }}
+      cdimagesmirror: {{ $cdimagesmirror }}
+      skip_remove_apt_user: true
+      additional_apt_repos: {{ $additional_apt_repos }}
+
+  - action: recipe
+    description: Create Ubuntu Touch rootfs
+    recipe: ubuntu-touch-common.yaml
+    variables:
+      architecture: {{ $architecture }}
+
+  - action: recipe
+    description: Finalizing image in for system-image consumption.
+    recipe: focal-finalize-system-image.yaml
+    variables:
+      architecture: {{ $architecture }}
+      image: {{ $image }}
+      phablet_password: {{ $phablet_password }}
