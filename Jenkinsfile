@@ -5,8 +5,7 @@ def build_image = {
     ./debos-podman \
       "./$RECIPE" \
       --fakemachine-backend kvm \
-      -m 2G \
-      --scratchsize 10G \
+      -m 12G \
       --cpus $(nproc --all) \
       -e "APT_PROXY:http://$(ip route get 8.8.8.8 | head -1 | cut -d\' \' -f7):3142" \
       -t "image:$IMAGE" -t "architecture:${ARCHITECTURE}"
