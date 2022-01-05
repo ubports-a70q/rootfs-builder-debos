@@ -21,28 +21,13 @@ actions:
     script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early
     label: run-parts
 
-    # TODO: should have a task pacakge at some point.
   - action: run
     description: Install packages
     chroot: true
     script: >-
       ../scripts/apt-install.sh --no-install-recommends
-      ubuntu-minimal ubuntu-standard
-      network-manager openssh-server hybris-usb lxc-android-config
-      ubuntu-touch-session lomiri-indicator-network libnss-extrausers
-      lomiri-keyboard lomiri-keyboard-english
-      lomiri-system-settings lomiri-system-settings-system-update
-      system-image-cli system-image-dbus
-      libqt5gui5-gles libqt5gui5- qtwayland5 qtubuntu-android
-      qml-module-qtquick-controls2
-      mir-graphics-drivers-android mir-graphics-drivers-android-caf
-      repowerd
-      pulseaudio
-      pulseaudio-modules-droid-24 pulseaudio-modules-droid-28
-      pulseaudio-modules-droid-glue-24 pulseaudio-modules-droid-glue-28
-      pulseaudio-modules-droid-hidl-28 pulseaudio-module-droid-discover
-      nano bash-completion
-      ubports-qa-scripts
+      ubuntu-touch-hybris
+      ubuntu-minimal
     label: apt-install.sh
 
   - action: overlay
