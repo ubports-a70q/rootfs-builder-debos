@@ -17,6 +17,7 @@ actions:
       ../scripts/apt-install.sh --no-install-recommends
       ubuntu-touch-{{ .variant }}
       ubuntu-minimal
+      libqt5gui5-gles libqt5quick5-gles
       lomiri-system-settings
     label: apt-install.sh
 
