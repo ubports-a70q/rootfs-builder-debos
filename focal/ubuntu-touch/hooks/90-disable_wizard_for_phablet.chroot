@@ -7,5 +7,9 @@
 
 su phablet -c '
     mkdir -p /home/phablet/.config/lomiri
-    touch /home/phablet/.config/lomiri/wizard-has-run
+    if [ -e /usr/share/click/frameworks/current ]; then
+        cat /usr/share/click/frameworks/current >/home/phablet/.config/lomiri/wizard-has-run
+    else
+        touch /home/phablet/.config/lomiri/wizard-has-run
+    fi
 '
