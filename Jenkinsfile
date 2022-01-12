@@ -37,7 +37,7 @@ pipeline {
         axes {
           axis {
             name 'VARIANT'
-            values 'ubuntu-touch-hybris'
+            values 'ubuntu-touch-hybris', 'ubuntu-touch-android9plus'
           }
 
           axis {

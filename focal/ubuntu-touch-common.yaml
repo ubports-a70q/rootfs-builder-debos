@@ -1,0 +1,46 @@
+architecture: {{ .architecture }}
+actions:
+  - action: run
+    descriptions: Run Ubuntu Touch early hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early {{ .variant }}
+    label: run-parts
+
+  - action: run
+    description: Install packages
+    chroot: true
+    # lomiri-system-settings is added to avoid installing ayatana-indicator-bluetooth's
+    # alternative dependency (gnome-bluetooth). This follows what livecd-rootfs did. See:
+    # - https://git.launchpad.net/livecd-rootfs/commit/?h=ubuntu/xenial&id=c96f3ee088abca85fa31f60dd5b237a4cc355c44
+    # - https://git.launchpad.net/livecd-rootfs/commit/?h=ubuntu/yakkety&id=d43c01c60b88aa481fa5a4b4dd19d56f7e041ef4
+    script: >-
+      ../scripts/apt-install.sh --no-install-recommends
+      ubuntu-touch-{{ .variant }}
+      ubuntu-minimal
+      libqt5gui5-gles libqt5quick5-gles
+      lomiri-system-settings
+    label: apt-install.sh
+
+  - action: overlay
+    description: Add Ubuntu Touch overlays
+    source: ./ubuntu-touch/overlay
+    destination: /
+
+  - action: recipe
+    description: Run selected hooks from live-build
+    recipe: ../common/live-build-hooks.yaml
+    variables:
+      architecture: {{ .architecture }}
+      lb_chroot_hooks: >-
+        update-apt-xapian-index
+        update-mlocate-database
+        remove-dbus-machine-id
+        remove-openssh-server-host-keys
+        remove-udev-persistent-rules
+        remove-python-py
+
+  - action: run
+    descriptions: Run Ubuntu Touch hooks
+    chroot: true
+    script: ./ubuntu-touch/hooks/run-hooks.sh chroot {{ .variant }}
+    label: run-parts

@@ -1,4 +1,4 @@
-{{- $variant := "hybris" -}}
+{{- $variant := "android9plus" -}}
 {{- $architecture := or .architecture "arm64" -}}
 {{- $image := or .image (printf "ubuntu-touch-%s-rootfs-%s.tar.gz" $variant $architecture) -}}
 {{- $cdimagesmirror := or .cdimagesmirror "http://cdimage.ubuntu.com" -}}
