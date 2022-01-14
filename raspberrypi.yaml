@@ -90,6 +90,12 @@ actions:
     label: uart
     command: sed -i 's/ttyS0/ttyAMA0/g' /etc/init/ttyS0.conf
 
+  - action: run 
+    chroot: true 
+    description: Installing zram.config 
+    label: apt 
+    script: scripts/apt-install.sh zram.config crda
+
   - action: recipe
     description: Polish the image
     recipe: polish.yaml
