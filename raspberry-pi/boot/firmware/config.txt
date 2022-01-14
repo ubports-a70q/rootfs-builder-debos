@@ -52,6 +52,9 @@
 
 # Additional overlays and parameters are documented /boot/overlays/README
 
+# Enable bluetooth
+dtoverlay=miniuart-bt,krnbt=on
+
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
