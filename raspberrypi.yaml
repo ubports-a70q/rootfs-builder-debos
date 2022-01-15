@@ -15,13 +15,6 @@ actions:
       # Add recent fix from mainline-generic.yaml
       imagesuffix: -mainline-edge
 
-  # Add the linux-firmware package
-  - action: recipe
-    description: Setup core rootfs
-    recipe: mainline-rootfs-firmware.yaml
-    variables:
-      architecture: {{ $architecture }}
-
 # cp root/etc/mke2fs.conf /etc/mke2fs.conf
   - action: run
     description: Copy mke2fs config
