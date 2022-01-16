@@ -52,6 +52,9 @@
 
 # Additional overlays and parameters are documented /boot/overlays/README
 
+# Enable bluetooth
+dtoverlay=miniuart-bt,krnbt=on
+
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
@@ -64,6 +67,7 @@ max_framebuffers=2
 # Enable DRM VC4 V3D driver on top of the dispmanx display stack
 dtoverlay=vc4-fkms-v3d
 # 
+kernel=vmlinuz
 ramfsfile=initrd.img
 # Enable 64 bit
 arm_64bit=1

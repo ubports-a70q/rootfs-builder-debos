@@ -15,24 +15,10 @@ actions:
       # Add recent fix from mainline-generic.yaml
       imagesuffix: -mainline-edge
 
-  # Add the linux-firmware package
-  - action: recipe
-    description: Setup core rootfs
-    recipe: mainline-rootfs-firmware.yaml
-    variables:
-      architecture: {{ $architecture }}
-
 # cp root/etc/mke2fs.conf /etc/mke2fs.conf
   - action: run
     description: Copy mke2fs config
     script: scripts/copy-rootfs-mke2fs.sh
-
-# Download the lastest raspberry pi https://github.com/raspberrypi/firmware
-  - action: download
-    description: Download latest version of the firmware from GitHub
-    url: https://github.com/raspberrypi/firmware/archive/{{ $firmware_version }}.tar.gz
-    unpack: true
-    name: firmware
 
 # Create image partitions for the image.
 # /boot/firmware for the device tree blobs and so on. The Device Tree Blob gets loaded by the bootloader and parsed bythe kernel at boot time.
@@ -67,56 +53,41 @@ actions:
     description: Setting egl libs to use mesa
     script: scripts/enable-mesa.sh
 
-# Copy firmware/boot from github to the image /boot/modules
-  - action: overlay
-    origin: firmware
-    source: firmware-{{ $firmware_version }}/boot
-    destination: /boot/firmware
-
-# Copy firmware/modules from github to the image /lib/modules
-  - action: overlay
-    origin: firmware
-    source: firmware-{{ $firmware_version }}/modules
-    destination: /lib/modules
+# Add firmware and kernel
+  - action: run
+    chroot: true
+    description: Add firmware and kernel
+    script: scripts/add-rpi-firmware.sh
 
 # Copy raspberry-pi folder with cmdline.txt and config.txt in /boot/firmware/
   - action: overlay
     source: raspberry-pi/
     destination: /
 
-# Copy ubportspiblobs_0.1-0.deb to the image file system
-# brcmfmac43430-sdio.clm_blob, brcmfmac43430-sdio.txt, brcmfmac43455-sdio.clm_blob and brcmfmac43455-sdio.txt
-  - action: overlay
-    description: Copying linux firmwares to rootfs
-    source: files/ubportspiblobs_0.1-0.deb
-    destination: /var/tmp/ubportspiblobs_0.1-0.deb
-
-# Installing ubportspiblobs_0.1-0.deb this to add the additional files which are not included in linux-firmware_1.183.1_all.deb:
-# brcmfmac43430-sdio.clm_blob, brcmfmac43430-sdio.txt, brcmfmac43455-sdio.clm_blob and brcmfmac43455-sdio.txt
-  - action: run
-    chroot: true
-    description: Installing linux firmwares
-    label: dpkg
-    command: dpkg -i /var/tmp/*.deb && rm /var/tmp/* -r
-
 # Depmod program to generate modules.dep and map files of the frimware.
 #"$(find /lib/modules -type d -name "*-v8+" | grep -oE "[^/]+$")" -> looks like "4.19.73-v8+" depending on the github version
   - action: run
     chroot: true
-    command: depmod -a "$(find /lib/modules -type d -name "*-v8+" | grep -oE "[^/]+$")"
+    command: depmod -a "$(find /lib/modules -type d -name "*-v8" | grep -oE "[^/]+$")"
 
 # The update-initramfs script manages your initramfs images on your local box. It keeps track of the existing initramfs archives in /boot.
 # -c This mode creates a new initramfs.
 # -k Set the specific kernel version for whom the initramfs will be generated.
   - action: run
     chroot: true
-    command: kernelversion=$(find /lib/modules -type d -name "*-v8+" | grep -oE "[^/]+$") && update-initramfs -c -k "$kernelversion" -b /boot/firmware && sed -i "s/initrd.img/initrd.img-$kernelversion/g" /boot/firmware/config.txt
+    command: kernelversion=$(find /lib/modules -type d -name "*-v8" | grep -oE "[^/]+$") && update-initramfs -c -k "$kernelversion" -b /boot/firmware && sed -i "s/initrd.img/initrd.img-$kernelversion/g" /boot/firmware/config.txt
 
   - action: run
     chroot: true
     description: Set uart tty
     label: uart
     command: sed -i 's/ttyS0/ttyAMA0/g' /etc/init/ttyS0.conf
+
+  - action: run 
+    chroot: true 
+    description: Installing zram.config 
+    label: apt 
+    script: scripts/apt-install.sh zram.config crda
 
   - action: recipe
     description: Polish the image
