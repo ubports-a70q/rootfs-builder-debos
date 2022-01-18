@@ -1,10 +1,16 @@
 #!/bin/sh
 
+set -e
+
 # Firmware repos locations
 bootFirmwareRepo=https://raw.githubusercontent.com/raspberrypi/firmware/master
 nonFreeFirmwareRepo=https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/buster
 bluezFirmwareRepo=https://raw.githubusercontent.com/RPi-Distro/bluez-firmware/master
 kernelArtifacts=https://gitlab.com/ubports/community-ports/non-android/linux/-/jobs/artifacts/rpi-5.15.y/raw
+
+# Work around resolver failure in debos' fakemachine
+mv /etc/resolv.conf /etc/resolv2.conf
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
 echo "Create tmp folder..."
 mkdir -p /var/tmp && cd /var/tmp
@@ -83,3 +89,7 @@ echo "Download the copyright licence..."
 wget $bluezFirmwareRepo/broadcom/BCM-LEGAL.txt
 
 echo "All downloads complete!"
+
+# Undo changes to work around debos fakemachine resolver
+rm /etc/resolv.conf
+mv /etc/resolv2.conf /etc/resolv.conf
