@@ -47,6 +47,11 @@ actions:
     description: Remove udev override used in Halium setup
     command: rm /etc/init/udev.override
 
+  - action: run
+    chroot: true
+    description: Setting password on phablet user
+    command: echo phablet:phablet | chpasswd
+
   - action: recipe
     description: Polish the image
     recipe: polish.yaml
