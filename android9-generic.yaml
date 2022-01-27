@@ -55,6 +55,11 @@ actions:
       image: {{ $image }}
       output_type: {{ $output_type }}
 
+  - action: run
+    chroot: true
+    description: Enable SSH and USB network
+    command: sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' /etc/init/ssh.override && sed -i 's/manual/start on startup/g' /etc/init/ssh.override && sed -i 's/manual/start on startup/g' /etc/init/usb-tethering.conf
+
   - action: pack
     description: Compressing image
     file: {{ $image }}
