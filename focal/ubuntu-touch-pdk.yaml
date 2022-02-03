@@ -22,7 +22,7 @@ actions:
     variables:
       architecture: {{ $architecture }}
       variant: {{ $variant }}
-      additional_package: hybris-usb
+      additional_package: adbd
 
     # TODO: should have a task pacakge at some point.
   - action: run
