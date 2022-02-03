@@ -22,7 +22,9 @@ actions:
     variables:
       architecture: {{ $architecture }}
       variant: {{ $variant }}
-      additional_package: adbd
+      additional_package: >-
+        adbd
+        sshfs
 
     # TODO: should have a task pacakge at some point.
   - action: run
