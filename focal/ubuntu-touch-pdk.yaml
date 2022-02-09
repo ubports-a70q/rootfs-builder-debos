@@ -111,11 +111,6 @@ actions:
     command: grub-install --target=arm64-efi --no-nvram
 {{ end }}
 
-  - action: run
-    description: Disable mir's modeset probe globally
-    chroot: true
-    command: echo 'MIR_MESA_KMS_DISABLE_MODESET_PROBE=1' >> /etc/environment
-
   # polish.yaml must be run as the last step, as it contains the
   # step to (re-)create /etc/writable symlinks and systemd-nspawn
   # tends to overwrite them.
