@@ -1,0 +1,13 @@
+[Unit]
+Description=Generate SSH host keys
+Before=ssh.service
+ConditionFileIsExecutable=/usr/bin/ssh-keygen
+ConditionPathIsDirectory=/etc/ssh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ssh-keygen -A
+RemainAfterExit=true
+
+[Install]
+RequiredBy=ssh.service
