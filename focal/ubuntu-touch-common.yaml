@@ -1,3 +1,4 @@
+{{- $additional_package := or .additional_package "" -}}
 architecture: {{ .architecture }}
 actions:
   - action: run
@@ -19,6 +20,7 @@ actions:
       ubuntu-minimal
       libqt5gui5-gles libqt5quick5-gles
       lomiri-system-settings
+      {{ $additional_package }}
     label: apt-install.sh
 
   - action: overlay

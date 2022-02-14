@@ -1,8 +1,10 @@
 #!/bin/sh -ex
 
-# USB tethering's service file comes disabled by default to avoid conflict
-# with ADBD. However, we haven't figured out ADB, so USB tethering is the
-# only debugging tool for now. Thus, enable it by default to prevent locking
-# the developers out of their phones.
+if [ "$VARIANT" != "mainline" ]; then
+    # USB tethering's service file comes disabled by default to avoid conflict
+    # with ADBD. However, we haven't figured out ADB, so USB tethering is the
+    # only debugging tool for now. Thus, enable it by default to prevent locking
+    # the developers out of their phones.
 
-systemctl enable usb-tethering.service
+    systemctl enable usb-tethering.service
+fi
