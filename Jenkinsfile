@@ -10,8 +10,9 @@ def build_image = {
       -e "APT_PROXY:http://$(ip route get 8.8.8.8 | head -1 | cut -d\' \' -f7):3142" \
       -t "image:$IMAGE" -t "architecture:${ARCHITECTURE}"
   '''
+  sh 'if [ "$POST_BUILD_XZ" = "1" ]; then xz -1f -Q --threads 0 "$IMAGE"; fi'
   sh 'echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)_${ARCHITECTURE}_${GIT_BRANCH}_${BUILD_NUMBER}_${GIT_COMMIT}" | tee "${IMAGE}.build"'
-  archiveArtifacts(artifacts: '*.tar.gz,*.build,*.manifest', fingerprint: true, onlyIfSuccessful: true)
+  archiveArtifacts(artifacts: '*.tar.gz,*.xz,*.build,*.manifest', fingerprint: true, onlyIfSuccessful: true)
 }
 
 def check_for_changes = {
@@ -37,12 +38,34 @@ pipeline {
         axes {
           axis {
             name 'VARIANT'
-            values 'ubuntu-touch-hybris', 'ubuntu-touch-android9plus'
+            values 'ubuntu-touch-hybris-rootfs', 'ubuntu-touch-android9plus-rootfs', 'ubuntu-touch-pdk-img'
           }
 
           axis {
             name 'ARCHITECTURE'
-            values 'arm64', 'armhf'
+            values 'arm64', 'armhf', 'amd64'
+          }
+        }
+        excludes {
+          exclude {
+              axis {
+                  name 'VARIANT'
+                  notValues 'ubuntu-touch-pdk-img'
+              }
+              axis {
+                  name 'ARCHITECTURE'
+                  values 'amd64'
+              }
+          }
+          exclude {
+              axis {
+                  name 'VARIANT'
+                  values 'ubuntu-touch-pdk-img'
+              }
+              axis {
+                  name 'ARCHITECTURE'
+                  values 'armhf'
+              }
           }
         }
 
@@ -56,10 +79,12 @@ pipeline {
                 expression { check_for_changes() == 0 }
               }
             }
+
             environment {
-              RECIPE = "focal/${VARIANT}-rootfs.yaml"
-              IMAGE = "${VARIANT}-rootfs-${ARCHITECTURE}.tar.gz"
+              RECIPE = "focal/${VARIANT}.yaml"
+              IMAGE = "${VARIANT}-${ARCHITECTURE}.${VARIANT.endsWith("-rootfs") ? "tar.gz" : "raw"}"
               ARCHITECTURE = "${ARCHITECTURE}"
+              POST_BUILD_XZ = "${VARIANT.endsWith("-img") ? "1" : ""}"
             }
             steps {
               script {build_image()}

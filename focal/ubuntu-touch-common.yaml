@@ -1,3 +1,4 @@
+{{- $additional_package := or .additional_package "" -}}
 architecture: {{ .architecture }}
 actions:
   - action: run
@@ -6,21 +7,21 @@ actions:
     script: ./ubuntu-touch/hooks/run-hooks.sh chroot_early {{ .variant }}
     label: run-parts
 
-  - action: apt
+  - action: run
     description: Install packages
-    recommends: false
-    update: false
+    chroot: true
     # lomiri-system-settings is added to avoid installing ayatana-indicator-bluetooth's
     # alternative dependency (gnome-bluetooth). This follows what livecd-rootfs did. See:
     # - https://git.launchpad.net/livecd-rootfs/commit/?h=ubuntu/xenial&id=c96f3ee088abca85fa31f60dd5b237a4cc355c44
     # - https://git.launchpad.net/livecd-rootfs/commit/?h=ubuntu/yakkety&id=d43c01c60b88aa481fa5a4b4dd19d56f7e041ef4
-    packages:
-      - ubuntu-touch-{{ .variant }}
-      - ubuntu-minimal
-      - libqt5gui5-gles
-      - libqt5quick5-gles
-      - lomiri-system-settings
-    label: apt
+    script: >-
+      ../scripts/apt-install.sh --no-install-recommends
+      ubuntu-touch-{{ .variant }}
+      ubuntu-minimal
+      libqt5gui5-gles libqt5quick5-gles
+      lomiri-system-settings
+      {{ $additional_package }}
+    label: apt-install.sh
 
   - action: overlay
     description: Add Ubuntu Touch overlays
